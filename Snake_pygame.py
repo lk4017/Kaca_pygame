@@ -28,9 +28,8 @@ while not exit:
     glava.x += hitrost[0]
     glava.y += hitrost[1]
 
-
+    pygame.draw.rect(canvas, barve[2], jabolko)
     pygame.draw.rect(canvas, barve[0] , glava)
-    pygame.draw.rect(canvas, barve[2] , jabolko)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -38,15 +37,15 @@ while not exit:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_d:
-                hitrost = (3, 0)
+                hitrost = (5, 0)
 
             if event.key == pygame.K_a:
-                hitrost = (-3, 0)
+                hitrost = (-5, 0)
 
             if event.key == pygame.K_w:
-                hitrost = (0, -3)
+                hitrost = (0, -5)
 
             if event.key == pygame.K_s:
-                hitrost = (0, 3)
+                hitrost = (0, 5)
 
     pygame.display.update()
