@@ -12,16 +12,15 @@ pygame.display.set_caption('Snake pygame')
 exit = False
 
 #Deli telesa, jabolko
-glava = pygame.Rect(400, 300, 25, 25)
+#glava = pygame.Rect(400, 300, 25, 25)
 #telo = pygame.Rect()
-jabolko = pygame.Rect(random.randint(50, 750), random.randint(50, 550), 13, 13)
+#jabolko = pygame.Rect(random.randint(50, 750), random.randint(50, 550), 13, 13)
 
 #Spremenljivke
 barve = [(0, 0, 0),(0, 128, 0), (210, 4, 45), (150, 75, 0), (92, 64, 51), (34, 139, 34)]
-hitrost = (5, 0)
 block_size = 32
 clock = pygame.time.Clock()
-FPS = 60
+FPS = 10
 
 #Mreza ekrana
 def draw_grid(block_size):
@@ -49,9 +48,11 @@ class Kaca:
         self.rect.x = self.x * block_size
         self.rect.y = self.y * block_size
 
+        canvas.blit(self.image, self.rect)
+
     def premik(self):
-        self.x = self.dx
-        self.y = self.dy
+        self.x += self.dx
+        self.y += self.dy
 
 kaca = Kaca(0, 0, barve[5])
 
@@ -59,16 +60,11 @@ kaca = Kaca(0, 0, barve[5])
 while not exit:
     canvas.fill(barve[3])
     draw_grid(block_size)
+
     kaca.update()
     kaca.premik()
+
     clock.tick(FPS)
-    #casova_razlika = clock.tick(60)/100
-
-    #glava.x += hitrost[0]
-    #glava.y += hitrost[1]
-
-    #pygame.draw.rect(canvas, barve[2], jabolko)
-    #pygame.draw.rect(canvas, barve[0] , glava)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
