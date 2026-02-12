@@ -2,26 +2,37 @@ import pygame
 import random
 pygame.init()
 
-canvas = pygame.display.set_mode((800, 600))
+#Osnovne nastavitve
+window_height = 800
+window_width = 800
+
+canvas = pygame.display.set_mode((window_width, window_height))
 
 pygame.display.set_caption('Snake_pygame')
 exit = False
 
-color = (150, 75, 0)
-
-clock = pygame.time.Clock()
-
-exit = False
-
+#Deli telesa, jabolko
 glava = pygame.Rect(400, 300, 25, 25)
 #telo = pygame.Rect()
 jabolko = pygame.Rect(random.randint(50, 750), random.randint(50, 550), 13, 13)
 
-barve = [(0, 0, 0),(0, 128, 0), (210, 4, 45)]
-hitrost = (3, 0)
+#Spremenljivke
+barve = [(0, 0, 0),(0, 128, 0), (210, 4, 45), (150, 75, 0), (92, 64, 51)]
+hitrost = (5, 0)
+block_size = 32
+clock = pygame.time.Clock()
 
+#Mreza ekrana
+def draw_grid(block_size):
+    for x in range(block_size, window_width, block_size):
+        pygame.draw.line(canvas, barve[4], (x, 0), (x, window_height))
+    for y in range(block_size, window_height, block_size):
+        pygame.draw.line(canvas, barve[4], (0, y), (window_height, y))
+
+#Glavna zanka
 while not exit:
-    canvas.fill(color)
+    canvas.fill(barve[3])
+    draw_grid(block_size)
     clock.tick(20)
     #casova_razlika = clock.tick(60)/100
 
@@ -48,4 +59,5 @@ while not exit:
             if event.key == pygame.K_s:
                 hitrost = (0, 5)
 
+#poglej kko ima ucitelj narejeno
     pygame.display.update()
