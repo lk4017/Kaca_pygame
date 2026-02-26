@@ -3,8 +3,8 @@ import random
 pygame.init()
 
 #Osnovne nastavitve
-window_height = 800
-window_width = 800
+window_height = 600
+window_width = 600
 
 canvas = pygame.display.set_mode((window_width, window_height))
 
@@ -14,47 +14,54 @@ exit = False
 #Deli telesa, jabolko
 #glava = pygame.Rect(400, 300, 25, 25)
 #telo = pygame.Rect()
-#jabolko = pygame.Rect(random.randint(50, 750), random.randint(50, 550), 13, 13)
+jabolko = pygame.Rect(random.randint(50, 750), random.randint(50, 550), 13, 13)
 
 #Spremenljivke
 barve = [(0, 0, 0),(0, 128, 0), (210, 4, 45), (150, 75, 0), (92, 64, 51), (34, 139, 34)]
-block_size = 32
+block_size = 30
 clock = pygame.time.Clock()
-FPS = 10
+FPS = 30
+odziv = 150
+zadnji_premik = pygame.time.get_ticks()
 
 #Mreza ekrana
 def draw_grid(block_size):
     for x in range(block_size, window_width, block_size):
         pygame.draw.line(canvas, barve[4], (x, 0), (x, window_height))
     for y in range(block_size, window_height, block_size):
-        pygame.draw.line(canvas, barve[4], (0, y), (window_height, y))
+        pygame.draw.line(canvas, barve[4], (0, y), (window_width, y))
 
 #Risanje kace
 class Kaca:
     def __init__(self, x, y, color):
-        self.x = x
-        self.y = y
+        self.body = [(x, y)]
         self.color = color
         self.image = pygame.Surface((block_size, block_size))
-        self.rect = self.image.get_rect(topleft = (self.x, self.y))
+        self.rect = self.image.get_rect(topleft = (self.body[0]))
+        self.grow = False
 
         self.hitrost = 1
         self.dx = self.hitrost
         self.dy = 0
 
     def update(self):
-        self.image.fill(self.color)
-
-        self.rect.x = self.x * block_size
-        self.rect.y = self.y * block_size
-
-        canvas.blit(self.image, self.rect)
+        for part in self.body:
+            rect = pygame.Rect(part[0] * block_size, part[1] * block_size, block_size, block_size)
+            pygame.draw.rect(canvas, self.color, rect)
 
     def premik(self):
-        self.x += self.dx
-        self.y += self.dy
+        glava_x, glava_y = self.body[0]
+        nova_glava = (glava_x + self.dx, glava_y + self.dy)
 
-kaca = Kaca(0, 0, barve[5])
+        self.body.insert(0, nova_glava)
+        if self.grow == False:
+            self.body.pop()
+        else:
+            self.grow = False
+
+        self.body.pop()
+
+kaca = Kaca(0, 0, barve[0])
 
 #Glavna zanka
 while not exit:
@@ -62,7 +69,13 @@ while not exit:
     draw_grid(block_size)
 
     kaca.update()
-    kaca.premik()
+    pygame.draw.rect(canvas, barve[3], jabolko)
+
+    trenutni_cas = pygame.time.get_ticks() #mora biti tu notri, da ima ves cas izvajanja glavne zanke sedanji cas
+
+    if trenutni_cas - zadnji_premik > odziv:
+        kaca.premik()
+        zadnji_premik = trenutni_cas
 
     clock.tick(FPS)
 
@@ -71,19 +84,19 @@ while not exit:
             exit = True
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_d:
+            if event.key == pygame.K_d and kaca.dx == 0:
                 kaca.dx = kaca.hitrost
                 kaca.dy = 0
 
-            elif event.key == pygame.K_a:
+            elif event.key == pygame.K_a and kaca.dx == 0:
                 kaca.dx = -kaca.hitrost
                 kaca.dy = 0
 
-            elif event.key == pygame.K_w:
+            elif event.key == pygame.K_w and kaca.dy == 0:
                 kaca.dx = 0
                 kaca.dy = -kaca.hitrost
 
-            elif event.key == pygame.K_s:
+            elif event.key == pygame.K_s and kaca.dy == 0:
                 kaca.dx = 0
                 kaca.dy = kaca.hitrost
 
