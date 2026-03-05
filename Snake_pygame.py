@@ -28,6 +28,7 @@ barve = [(0, 0, 0),
 
 #Spremenljivke
 block_size = 25
+barva_kace = (34, 139, 34)
 clock = pygame.time.Clock()
 FPS = 30
 odziv = 150
@@ -81,11 +82,13 @@ class Kaca:
         else:
             self.grow = False
 
-kaca = Kaca(0, 0, barve[5])
+    def sprememba_barve(self):
+        self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+kaca = Kaca(0, 0, barva_kace)
 
 #Glavna zanka
 while not exit:
-
     canvas.fill(barve[3])
     draw_grid(block_size)
     jabolko = pygame.Rect(jabolko_pos[0] * block_size + odmik, jabolko_pos[1] * block_size + odmik, velikost_jabolka, velikost_jabolka)
@@ -130,6 +133,11 @@ while not exit:
             elif event.key == pygame.K_s and kaca.dy == 0:
                 kaca.dx = 0
                 kaca.dy = kaca.hitrost
+
+            elif event.key == pygame.K_SPACE:
+                kaca.sprememba_barve()
+
+
 
     pygame.display.update()
 
