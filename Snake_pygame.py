@@ -3,8 +3,8 @@ import random
 pygame.init()
 
 #Osnovne nastavitve
-window_height = 400
-window_width = 400
+window_height = 600
+window_width = 600
 
 canvas = pygame.display.set_mode((window_width, window_height))
 
@@ -14,7 +14,7 @@ exit = False
 #Barve
 barve = [(0, 0, 0),
          #Crna,
-         (0, 128, 0),
+         (53, 94, 59),
          #Zelena,
          (210, 4, 45),
          #Rdeca,
@@ -23,12 +23,16 @@ barve = [(0, 0, 0),
          (92, 64, 51),
          #Temno rjava,
          (34, 139, 34),
-         #Temno zelena
+         #Temno zelena,
+         (105,105,105),
+         #Siva,
+         (32,32,32)
+         #Temno siva
          ]
 
 #Spremenljivke
-block_size = 25
-barva_kace = (34, 139, 34)
+block_size = 50
+barva_kace = (0, 71, 171)
 clock = pygame.time.Clock()
 FPS = 30
 odziv = 150
@@ -42,9 +46,9 @@ Konec_igre = False
 #Mreza ekrana
 def draw_grid(block_size):
     for x in range(block_size, window_width, block_size):
-        pygame.draw.line(canvas, barve[4], (x, 0), (x, window_height))
+        pygame.draw.line(canvas, barve[1], (x, 0), (x, window_height))
     for y in range(block_size, window_height, block_size):
-        pygame.draw.line(canvas, barve[4], (0, y), (window_width, y))
+        pygame.draw.line(canvas, barve[1], (0, y), (window_width, y))
 
 #Risanje kace
 class Kaca:
@@ -89,7 +93,7 @@ kaca = Kaca(0, 0, barva_kace)
 
 #Glavna zanka
 while not exit:
-    canvas.fill(barve[3])
+    canvas.fill(barve[5])
     draw_grid(block_size)
     jabolko = pygame.Rect(jabolko_pos[0] * block_size + odmik, jabolko_pos[1] * block_size + odmik, velikost_jabolka, velikost_jabolka)
     pygame.draw.rect(canvas, barve[2], jabolko)
@@ -110,8 +114,13 @@ while not exit:
 
     if kaca.body[0] == jabolko_pos:
         kaca.grow = True
-        jabolko_pos = (random.randint(0, window_width // block_size -1 ),
+
+        while True:
+            nova_pos = (random.randint(0, window_width // block_size -1 ),
                        random.randint(0, window_height // block_size -1))
+            if nova_pos not in kaca.body:
+                jabolko_pos = nova_pos
+                break
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
